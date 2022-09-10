@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 )
 
 const (
@@ -16,6 +17,11 @@ const (
 var (
 	ErrKeyAlreadyExists = errors.New("key already exists")
 )
+
+type ConfigVar struct {
+	Value         string
+	LastUpdatedAt time.Time
+}
 
 func CreateFileIfNotExists(path string) error {
 	_, err := os.Stat(path)
@@ -39,11 +45,14 @@ func Write(key string, value string) error {
 	}
 
 	configVars := ReadConfigurationJson()
-	if configVars[key] != "" {
+	if configVars[key].Value != "" {
 		return ErrKeyAlreadyExists
 	}
 
-	configVars[key] = value
+	configVars[key] = ConfigVar{
+		Value:         value,
+		LastUpdatedAt: time.Now(),
+	}
 
 	file, err := os.OpenFile(configurationJsonPath, os.O_WRONLY, os.ModeAppend)
 	if err != nil {
@@ -56,11 +65,11 @@ func Write(key string, value string) error {
 	return err
 }
 
-func ReadConfigurationJson() map[string]string {
+func ReadConfigurationJson() map[string]ConfigVar {
 	file, err := os.Open(configurationJsonPath)
 	if err != nil {
 		fmt.Println("An error occured while opening configuration json : ", err)
-		return map[string]string{}
+		return map[string]ConfigVar{}
 	}
 
 	defer file.Close()
@@ -68,9 +77,10 @@ func ReadConfigurationJson() map[string]string {
 	byteValue, err := io.ReadAll(file)
 	if err != nil {
 		fmt.Println("error : ", err)
+		return map[string]ConfigVar{}
 	}
 
-	envVars := make(map[string]string)
+	envVars := make(map[string]ConfigVar)
 	json.Unmarshal(byteValue, &envVars)
 
 	return envVars
@@ -80,6 +90,7 @@ func ReadHtml() string {
 	file, err := os.Open(comandanteHtmlPath)
 	if err != nil {
 		fmt.Println("An error occured while opening html file : ", err)
+		return ""
 	}
 
 	defer file.Close()

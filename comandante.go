@@ -16,7 +16,11 @@ func Configure(cfg Config) {
 	go func() {
 		for {
 			definedEnvVars := filemanager.ReadConfigurationJson()
-			cfg.SetEnv(definedEnvVars)
+			keyValueMap := make(map[string]string)
+			for key, value := range definedEnvVars {
+				keyValueMap[key] = value.Value
+			}
+			cfg.SetEnv(keyValueMap)
 			time.Sleep(3 * time.Second)
 		}
 	}()

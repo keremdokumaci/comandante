@@ -5,13 +5,15 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"time"
 
 	filemanager "github.com/keremdokumaci/comandante/src/file_manager"
 )
 
 type envVar struct {
-	Key   string
-	Value string
+	Key           string
+	Value         string
+	LastUpdatedAt string
 }
 type htmlData struct {
 	EnvVars      []envVar
@@ -28,8 +30,9 @@ func renderPage(w http.ResponseWriter, r *http.Request) {
 	envVars := filemanager.ReadConfigurationJson()
 	for key, value := range envVars {
 		envVar := envVar{
-			Key:   key,
-			Value: value,
+			Key:           key,
+			Value:         value.Value,
+			LastUpdatedAt: value.LastUpdatedAt.Format(time.RFC3339), // TODO: format by timezone
 		}
 		htmlData.EnvVars = append(htmlData.EnvVars, envVar)
 	}
