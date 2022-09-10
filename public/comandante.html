@@ -37,19 +37,19 @@
         <p>Manage server configs</p>
       </div>
       <div class="new">
-        <div class="row">
-          <div class="mb-3 col">
-            <input type="text" class="form-control" id="key" placeholder="Key">
-          </div>
-          <div class="mb-3 col">
-            <input type="text" class="form-control" id="value" placeholder="Value">
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <button type="button" class="btn btn-success" onclick="AddNewConfig()">Add New Config Variable</button>
-          </div>
-        </div>
+          <form class="row" onsubmit="AddNewConfig()">
+            <div class="mb-3 col">
+              <input type="text" class="form-control" id="key" placeholder="Key">
+            </div>
+            <div class="mb-3 col">
+              <input type="text" class="form-control" id="value" placeholder="Value">
+            </div>
+            <div class="row">
+              <div class="col">
+                <button type="submit" class="btn btn-success">Add New Config Variable</button>
+              </div>
+            </div>
+          </form>
       </div>
       <div class="vars">
         <table class="table table-striped vars">
