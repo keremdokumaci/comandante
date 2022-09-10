@@ -28,6 +28,7 @@
       integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
       crossorigin="anonymous"
     ></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
   </head>
   <body>
     <div class="container text-center">
@@ -46,7 +47,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <button type="button" class="btn btn-success">Add New Config Variable</button>
+            <button type="button" class="btn btn-success" onclick="AddNewConfig()">Add New Config Variable</button>
           </div>
         </div>
       </div>
@@ -72,5 +73,20 @@
       </div>
     </div>
   </body>
-  <script></script>
+  <script>
+    function AddNewConfig(){
+      $.ajax({
+        type: "POST",
+        url: window.location.href,
+        data: JSON.stringify({
+          "key": document.getElementById("key").value,
+          "value": document.getElementById("value").value
+        })
+      }).done(function(data) {
+        console.log('data', data)
+      }).fail(function(err){
+        console.log('err', err)
+      })
+    }
+  </script>
 </html>

@@ -1,7 +1,9 @@
 package comandante
 
 import (
+	"encoding/json"
 	"html/template"
+	"io"
 	"net/http"
 
 	filemanager "github.com/keremdokumaci/comandante/src/file_manager"
@@ -12,10 +14,16 @@ type envVar struct {
 	Value string
 }
 type htmlData struct {
-	EnvVars []envVar
+	EnvVars      []envVar
+	AddNewConfig func()
 }
 
-func HandlerFunc(w http.ResponseWriter, r *http.Request) {
+type addConfigRequest struct {
+	Key   string
+	Value string
+}
+
+func renderPage(w http.ResponseWriter, r *http.Request) {
 	htmlData := htmlData{}
 	envVars := filemanager.ReadConfigurationJson()
 	for key, value := range envVars {
@@ -34,4 +42,38 @@ func HandlerFunc(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 	}
 	t.Execute(w, htmlData)
+}
+
+func addConfig(w http.ResponseWriter, r *http.Request) {
+	bytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var request addConfigRequest
+	err = json.Unmarshal(bytes, &request)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = filemanager.Write(request.Key, request.Value)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+}
+
+func HandlerFunc(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		renderPage(w, r)
+	case http.MethodPost:
+		addConfig(w, r)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
 }
