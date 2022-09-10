@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -16,13 +17,12 @@ func customSetterFunc(envVars map[string]string) {
 func main() {
 	comandante.Configure(comandante.Config{
 		SetEnv: customSetterFunc,
+		ErrorHandler: func(err error) {
+			fmt.Println(err.Error())
+		},
+		RetryTimeInSec: 3,
 	})
+
 	http.HandleFunc("/comandante", comandante.HandlerFunc)
-
-	// http.HandleFunc("/variable", func(w http.ResponseWriter, r *http.Request) {
-	// 	envVar := os.Getenv("example_env_var")
-	// 	w.Write([]byte(envVar))
-	// })
-
 	http.ListenAndServe(":8080", nil)
 }

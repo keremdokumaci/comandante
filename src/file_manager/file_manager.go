@@ -44,7 +44,11 @@ func Write(key string, value string) error {
 		return err
 	}
 
-	configVars := ReadConfigurationJson()
+	configVars, err := ReadConfigurationJson()
+	if err != nil {
+		return err
+	}
+
 	if configVars[key].Value != "" {
 		return ErrKeyAlreadyExists
 	}
@@ -65,25 +69,23 @@ func Write(key string, value string) error {
 	return err
 }
 
-func ReadConfigurationJson() map[string]ConfigVar {
+func ReadConfigurationJson() (map[string]ConfigVar, error) {
 	file, err := os.Open(configurationJsonPath)
 	if err != nil {
-		fmt.Println("An error occured while opening configuration json : ", err)
-		return map[string]ConfigVar{}
+		return nil, err
 	}
 
 	defer file.Close()
 
 	byteValue, err := io.ReadAll(file)
 	if err != nil {
-		fmt.Println("error : ", err)
-		return map[string]ConfigVar{}
+		return nil, err
 	}
 
 	envVars := make(map[string]ConfigVar)
 	json.Unmarshal(byteValue, &envVars)
 
-	return envVars
+	return envVars, nil
 }
 
 func ReadHtml() string {

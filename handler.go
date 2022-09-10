@@ -10,14 +10,14 @@ import (
 	filemanager "github.com/keremdokumaci/comandante/src/file_manager"
 )
 
-type envVar struct {
+type configVariable struct {
 	Key           string
 	Value         string
 	LastUpdatedAt string
 }
 type htmlData struct {
-	EnvVars      []envVar
-	AddNewConfig func()
+	ConfigVariables []configVariable
+	AddNewConfig    func()
 }
 
 type addConfigRequest struct {
@@ -27,22 +27,26 @@ type addConfigRequest struct {
 
 func renderPage(w http.ResponseWriter, r *http.Request) {
 	htmlData := htmlData{}
-	envVars := filemanager.ReadConfigurationJson()
+
+	envVars, err := filemanager.ReadConfigurationJson()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
 	for key, value := range envVars {
-		envVar := envVar{
+		envVar := configVariable{
 			Key:           key,
 			Value:         value.Value,
 			LastUpdatedAt: value.LastUpdatedAt.Format(time.RFC3339), // TODO: format by timezone
 		}
-		htmlData.EnvVars = append(htmlData.EnvVars, envVar)
+		htmlData.ConfigVariables = append(htmlData.ConfigVariables, envVar)
 	}
 
 	w.Header().Add("Content Type", "text/plain")
 	t, err := template.New("comandante").Parse(filemanager.ReadHtml())
 
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	t.Execute(w, htmlData)
 }
