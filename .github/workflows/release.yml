@@ -20,4 +20,4 @@ jobs:
           echo ${{ steps.vars.outputs.tag }}
       - name: Publish to pkg.go
         run: |
-          GOPROXY=proxy.golang.org go list -m github.com/keremdokumaci/comandante@$RELEASE_VERSION
+          GOPROXY=proxy.golang.org go list -m github.com/keremdokumaci/comandante@${{ RELEASE_VERSION }}
