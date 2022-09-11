@@ -2,19 +2,12 @@ package comandante
 
 import (
 	"encoding/json"
-	"html/template"
 	"io"
 	"net/http"
 	"os"
 
 	"github.com/keremdokumaci/comandante/src/client"
-	"github.com/keremdokumaci/comandante/src/models"
 )
-
-type htmlData struct {
-	ConfigVariables models.ArrConfigurationVariable
-	AddNewConfig    func()
-}
 
 type addConfigRequest struct {
 	Key   string
@@ -23,24 +16,19 @@ type addConfigRequest struct {
 
 func (c *Comandante) renderPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content Type", "text/plain")
-	htmlData := htmlData{}
-
 	envVars, _ := c.Storage.GetAll() //TODO: log error here
 
-	htmlData.ConfigVariables = envVars
-
-	htmlContent, err := client.ReadHtml()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	htmlData := client.PageData{
+		ConfigVariables: envVars,
 	}
 
-	t, err := template.New("comandante").Parse(htmlContent)
-
+	template, err := client.GenerateTemplate(htmlData)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	t.Execute(w, htmlData)
+
+	template.Execute(w, htmlData)
 }
 
 func (c *Comandante) addConfig(w http.ResponseWriter, r *http.Request) {

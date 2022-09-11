@@ -1,13 +1,20 @@
 package client
 
 import (
+	"html/template"
 	"io"
 	"os"
 
 	"github.com/keremdokumaci/comandante/src/constants"
+	"github.com/keremdokumaci/comandante/src/models"
 )
 
-func ReadHtml() (string, error) {
+type PageData struct {
+	ConfigVariables models.ArrConfigurationVariable
+	AddNewConfig    func()
+}
+
+func readHtml() (string, error) {
 	file, err := os.Open(constants.ComandanteHtmlPath)
 	if err != nil {
 		return "", err
@@ -21,4 +28,18 @@ func ReadHtml() (string, error) {
 	}
 
 	return string(byteValue), nil
+}
+
+func GenerateTemplate(data PageData) (*template.Template, error) {
+	htmlContent, err := readHtml()
+	if err != nil {
+		return nil, err
+	}
+
+	t, err := template.New("comandante").Parse(htmlContent)
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
