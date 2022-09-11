@@ -28,11 +28,7 @@ type addConfigRequest struct {
 func renderPage(w http.ResponseWriter, r *http.Request) {
 	htmlData := htmlData{}
 
-	envVars, err := filemanager.ReadConfigurationJson()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-
+	envVars, _ := filemanager.ReadConfigurationJson() //TODO: log error here
 	for key, value := range envVars {
 		envVar := configVariable{
 			Key:           key,
