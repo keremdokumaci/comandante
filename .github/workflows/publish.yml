@@ -3,7 +3,7 @@ on:
     types:
       - published
 
-name: Update Go Module Index
+name: Publish
 
 jobs:
   bump-index:
