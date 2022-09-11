@@ -89,15 +89,3 @@ jobs:
           files: ${{env.BINARY_NAME}}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-  publish:
-    runs-on: ubuntu-latest
-    needs: release
-    steps:
-      - name: "Checkout repository"
-        uses: 'actions/checkout@v3'
-        with:
-          ref: ${{ github.ref }}
-          fetch-depth: 0
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-      - name: Ping endpoint
-        run: curl "https://proxy.golang.org/github.com/keremdokumaci/comandante/${{ github.event.inputs.version }}/$(git describe HEAD --tags --abbrev=0).info"
