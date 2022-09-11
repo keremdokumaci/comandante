@@ -9,15 +9,8 @@ import (
 	"github.com/keremdokumaci/comandante/src/storage"
 )
 
-func customSetterFunc(envVars map[string]string) {
-	for key, value := range envVars {
-		os.Setenv(key, value)
-	}
-}
-
 func main() {
 	cmdt := comandante.Configure(comandante.Config{
-		SetEnv: customSetterFunc,
 		ErrorHandler: func(err error) {
 			fmt.Println(err.Error())
 		},
@@ -26,5 +19,10 @@ func main() {
 	})
 
 	http.HandleFunc("/comandante", cmdt.HandlerFunc)
+
+	http.HandleFunc("/config_variables", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(os.Getenv("comandante")))
+	})
+
 	http.ListenAndServe(":8080", nil) //nolint
 }
