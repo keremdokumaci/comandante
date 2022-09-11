@@ -23,4 +23,6 @@ jobs:
           GOPROXY: proxy.golang.org 
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
+          git config --global user.name "keremdokumaci"
+          git config --global user.email "dokumaci.kerem@gmail.com"
           GOPROXY=${{ env.GOPROXY }} go list -m github.com/keremdokumaci/comandante@${{ env.RELEASE_VERSION }}
