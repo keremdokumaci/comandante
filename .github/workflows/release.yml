@@ -23,4 +23,4 @@ jobs:
           GOPROXY: proxy.golang.org 
           MODULE: github.com/keremdokumaci/comandante@$RELEASE_VERSION
         run: |
-          GOPROXY=$GOPROXY go list -m $MODULE
+          GOPROXY=${{ env.GOPROXY }} go list -m ${{ env.MODULE }}
