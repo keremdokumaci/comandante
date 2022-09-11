@@ -21,5 +21,6 @@ jobs:
       - name: Publish to pkg.go
         env:
           GOPROXY: proxy.golang.org 
+          MODULE: github.com/keremdokumaci/comandante@$RELEASE_VERSION
         run: |
-          go list -m github.com/keremdokumaci/comandante@$RELEASE_VERSION
+          go list -m $MODULE
