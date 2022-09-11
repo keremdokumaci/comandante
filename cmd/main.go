@@ -21,7 +21,7 @@ func main() {
 	http.HandleFunc("/comandante", cmdt.HandlerFunc)
 
 	http.HandleFunc("/config_variables", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(os.Getenv("comandante")))
+		w.Write([]byte(os.Getenv("comandante"))) //nolint
 	})
 
 	http.ListenAndServe(":8080", nil) //nolint
