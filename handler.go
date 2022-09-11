@@ -9,11 +9,6 @@ import (
 	"github.com/keremdokumaci/comandante/src/client"
 )
 
-type addConfigRequest struct {
-	Key   string
-	Value string
-}
-
 func (c *Comandante) renderPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content Type", "text/plain")
 	envVars, _ := c.Storage.GetAll() //TODO: log error here
@@ -38,7 +33,7 @@ func (c *Comandante) addConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var request addConfigRequest
+	var request client.AddConfigurationVariableRequestModel
 	err = json.Unmarshal(bytes, &request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
