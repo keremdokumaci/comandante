@@ -75,7 +75,9 @@ func (*FileStorage) GetAll() (models.ArrConfigurationVariable, error) {
 	}
 
 	var envVars models.ArrConfigurationVariable
-	json.Unmarshal(byteValue, &envVars)
+	if err = json.Unmarshal(byteValue, &envVars); err != nil {
+		return nil, err
+	}
 
 	return envVars, nil
 }

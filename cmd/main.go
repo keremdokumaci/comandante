@@ -26,5 +26,5 @@ func main() {
 	})
 
 	http.HandleFunc("/comandante", cmdt.HandlerFunc)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", nil) //nolint
 }

@@ -23,7 +23,11 @@ func (c *Comandante) renderPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	template.Execute(w, htmlData)
+	err = template.Execute(w, htmlData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 func (c *Comandante) addConfig(w http.ResponseWriter, r *http.Request) {
