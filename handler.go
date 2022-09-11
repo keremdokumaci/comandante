@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"os"
 
 	"github.com/keremdokumaci/comandante/src/client"
 	"github.com/keremdokumaci/comandante/src/models"
@@ -61,6 +62,8 @@ func (c *Comandante) addConfig(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	os.Setenv(request.Key, request.Value)
 
 	w.WriteHeader(http.StatusCreated)
 }
