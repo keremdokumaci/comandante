@@ -37,7 +37,7 @@ jobs:
       - name: Release with Notes
         uses: softprops/action-gh-release@v1
         with:
-          body_path: "../RELEASE-TEMPLATE.md"
+          body_path: "github/RELEASE-TEMPLATE.md"
           draft: true
           files: ${{env.BINARY_NAME}}
         env:
