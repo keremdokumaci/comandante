@@ -3,7 +3,6 @@ package filemanager
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"time"
@@ -88,19 +87,18 @@ func ReadConfigurationJson() (map[string]ConfigVar, error) {
 	return envVars, nil
 }
 
-func ReadHtml() string {
+func ReadHtml() (string, error) {
 	file, err := os.Open(comandanteHtmlPath)
 	if err != nil {
-		fmt.Println("An error occured while opening html file : ", err)
-		return ""
+		return "", err
 	}
 
 	defer file.Close()
 
 	byteValue, err := io.ReadAll(file)
 	if err != nil {
-		fmt.Println("error : ", err)
+		return "", err
 	}
 
-	return string(byteValue)
+	return string(byteValue), nil
 }

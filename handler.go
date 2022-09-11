@@ -43,7 +43,12 @@ func renderPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content Type", "text/plain")
-	t, err := template.New("comandante").Parse(filemanager.ReadHtml())
+	htmlContent, err := filemanager.ReadHtml()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	t, err := template.New("comandante").Parse(htmlContent)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
