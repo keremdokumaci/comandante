@@ -35,5 +35,6 @@ jobs:
       - name: "Bump the version"
         run: |
           git config --global user.name "Github Actions"
+          git config --global user.email "dokumaci.kerem@gmail.com"
           bump2version ${{ github.event.inputs.version }}
           git push --follow-tags
