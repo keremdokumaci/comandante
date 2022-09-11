@@ -1,0 +1,22 @@
+name: Golang CI Linter
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: golangci-lint-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: github.com/deliveryhero
+    steps:
+      - uses: actions/checkout@v2
+      - run: git config --global url.https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/.insteadOf https://github.com/
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: latest
