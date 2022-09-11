@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/keremdokumaci/comandante"
+	"github.com/keremdokumaci/comandante/src/storage"
 )
 
 func customSetterFunc(envVars map[string]string) {
@@ -15,14 +16,15 @@ func customSetterFunc(envVars map[string]string) {
 }
 
 func main() {
-	comandante.Configure(comandante.Config{
+	cmdt := comandante.Configure(comandante.Config{
 		SetEnv: customSetterFunc,
 		ErrorHandler: func(err error) {
 			fmt.Println(err.Error())
 		},
 		RetryTimeInSec: 3,
+		StoreIn:        storage.StorageFile,
 	})
 
-	http.HandleFunc("/comandante", comandante.HandlerFunc)
+	http.HandleFunc("/comandante", cmdt.HandlerFunc)
 	http.ListenAndServe(":8080", nil)
 }

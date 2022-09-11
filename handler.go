@@ -5,18 +5,13 @@ import (
 	"html/template"
 	"io"
 	"net/http"
-	"time"
 
-	filemanager "github.com/keremdokumaci/comandante/src/file_manager"
+	"github.com/keremdokumaci/comandante/src/client"
+	"github.com/keremdokumaci/comandante/src/models"
 )
 
-type configVariable struct {
-	Key           string
-	Value         string
-	LastUpdatedAt string
-}
 type htmlData struct {
-	ConfigVariables []configVariable
+	ConfigVariables models.ArrConfigurationVariable
 	AddNewConfig    func()
 }
 
@@ -25,21 +20,15 @@ type addConfigRequest struct {
 	Value string
 }
 
-func renderPage(w http.ResponseWriter, r *http.Request) {
+func (c *Comandante) renderPage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content Type", "text/plain")
 	htmlData := htmlData{}
 
-	envVars, _ := filemanager.ReadConfigurationJson() //TODO: log error here
-	for key, value := range envVars {
-		envVar := configVariable{
-			Key:           key,
-			Value:         value.Value,
-			LastUpdatedAt: value.LastUpdatedAt.Format(time.RFC3339), // TODO: format by timezone
-		}
-		htmlData.ConfigVariables = append(htmlData.ConfigVariables, envVar)
-	}
+	envVars, _ := c.Storage.GetAll() //TODO: log error here
 
-	w.Header().Add("Content Type", "text/plain")
-	htmlContent, err := filemanager.ReadHtml()
+	htmlData.ConfigVariables = envVars
+
+	htmlContent, err := client.ReadHtml()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -48,11 +37,12 @@ func renderPage(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	t.Execute(w, htmlData)
 }
 
-func addConfig(w http.ResponseWriter, r *http.Request) {
+func (c *Comandante) addConfig(w http.ResponseWriter, r *http.Request) {
 	bytes, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -66,7 +56,7 @@ func addConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = filemanager.Write(request.Key, request.Value)
+	err = c.Storage.Write(request.Key, request.Value)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -75,12 +65,12 @@ func addConfig(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func HandlerFunc(w http.ResponseWriter, r *http.Request) {
+func (c *Comandante) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		renderPage(w, r)
+		c.renderPage(w, r)
 	case http.MethodPost:
-		addConfig(w, r)
+		c.addConfig(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
