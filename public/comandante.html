@@ -2,28 +2,52 @@
 <html>
   <head>
     <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+      }
+
       .title {
-        margin-top: 15px;
+        margin-top: 50px;
         border: 3vh;
       }
 
-      .vars {
-        margin-top: 100px;
-      }
-      
       .new {
-        margin-top: 100px;
+        margin-top: 30px;
         border: groove;
         padding: 20px;
       }
+
       #alert-section {
-          position:fixed; 
-          top: 0px; 
-          right: 0px; 
-          max-width: 300px;
-          z-index:9999; 
-          border-radius:0px;
-          margin: 5px;
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        max-width: 300px;
+        z-index: 9999;
+        border-radius: 0px;
+        margin: 5px;
+      }
+
+      .my-custom-scrollbar {
+        position: relative;
+        height: 400px;
+        overflow: auto;
+      }
+
+      .table-wrapper-scroll-y {
+        margin-top: 30px;
+        display: block;
+      }
+
+      footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: red;
+        color: white;
+        text-align: center;
       }
     </style>
     <link
@@ -37,7 +61,10 @@
       integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
       crossorigin="anonymous"
     ></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
+      type="text/javascript"
+    ></script>
   </head>
   <body>
     <div class="container text-center">
@@ -46,21 +73,33 @@
         <p>Manage server configs</p>
       </div>
       <div class="new">
-          <form class="row" onsubmit="AddNewConfig(event)">
-            <div class="mb-3 col">
-              <input type="text" class="form-control" id="key" placeholder="Key">
+        <form class="row" onsubmit="AddNewConfig(event)">
+          <div class="mb-3 col">
+            <input
+              type="text"
+              class="form-control"
+              id="key"
+              placeholder="Key"
+            />
+          </div>
+          <div class="mb-3 col">
+            <input
+              type="text"
+              class="form-control"
+              id="value"
+              placeholder="Value"
+            />
+          </div>
+          <div class="row">
+            <div class="col">
+              <button type="submit" class="btn btn-success">
+                Add New Config Variable
+              </button>
             </div>
-            <div class="mb-3 col">
-              <input type="text" class="form-control" id="value" placeholder="Value">
-            </div>
-            <div class="row">
-              <div class="col">
-                <button type="submit" class="btn btn-success">Add New Config Variable</button>
-              </div>
-            </div>
-          </form>
+          </div>
+        </form>
       </div>
-      <div class="vars">
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
         <table class="table table-striped vars">
           <thead class="thead-dark">
             <tr>
@@ -71,48 +110,66 @@
           </thead>
           <tbody>
             {{range .ConfigVariables}}
-              <tr>
-                <td>{{.Key}}</td>
-                <td>{{.Value}}</td>
-                <td>{{.LastUpdatedAt}}</td>
-              </tr>
+            <tr>
+              <td>{{.Key}}</td>
+              <td>{{.Value}}</td>
+              <td>{{.LastUpdatedAt}}</td>
+            </tr>
             {{end}}
           </tbody>
         </table>
       </div>
+      <footer class="bg-light text-center text-lg-start">
+        <div
+          class="text-center p-3"
+          style="background-color: rgba(0, 0, 0, 0.2)"
+        >
+          Don't forget to give a star &#x1F62C;
+          <div>
+            <a class="text-dark" href="https://mdbootstrap.com/">Comandante</a>
+          </div>
+        </div>
+      </footer>
     </div>
+
     <div id="alert-section"></div>
   </body>
   <script>
-    function AddNewConfig(e){
+    function AddNewConfig(e) {
       e.preventDefault();
       $.ajax({
         type: "POST",
         url: window.location.href,
         data: JSON.stringify({
-          "key": document.getElementById("key").value,
-          "value": document.getElementById("value").value
-        })
-      }).done(function(data) {
-        Alert("Config variable was added successfully !", "success")
-        setTimeout(() => {
-          window.location.reload();
-        }, 700)
-      }).fail(function(err){
-        Alert("Error : " + err.responseText, "danger")
+          key: document.getElementById("key").value,
+          value: document.getElementById("value").value,
+        }),
       })
+        .done(function (data) {
+          Alert("Config variable was added successfully !", "success");
+          setTimeout(() => {
+            window.location.reload();
+          }, 700);
+        })
+        .fail(function (err) {
+          Alert("Error : " + err.responseText, "danger");
+        });
     }
-    
-    function Alert(message,type) {
-      const alertSection = document.getElementById('alert-section')
-      const wrapper = document.createElement('div')
+
+    function Alert(message, type) {
+      const alertSection = document.getElementById("alert-section");
+      const wrapper = document.createElement("div");
       wrapper.innerHTML = [
         `<div class="alert alert-${type} alert-dismissible" role="alert">`,
         `   <div>${message}</div>`,
         '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
-      alertSection.append(wrapper)
+        "</div>",
+      ].join("");
+      alertSection.append(wrapper);
+    }
+
+    function OpenRepository() {
+      window.location.replace("http://github.com/keremdokumaci/comandante");
     }
   </script>
 </html>
