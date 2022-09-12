@@ -2,11 +2,16 @@ package comandante
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"os"
 
 	"github.com/keremdokumaci/comandante/src/client"
+)
+
+var (
+	errKeyAndValueFieldsAreRequired = errors.New("key and value fields are required")
 )
 
 func (c *Comandante) renderPage(w http.ResponseWriter, r *http.Request) {
@@ -41,6 +46,11 @@ func (c *Comandante) addConfig(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(bytes, &request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if request.Key == "" || request.Value == "" {
+		http.Error(w, errKeyAndValueFieldsAreRequired.Error(), http.StatusBadRequest)
 		return
 	}
 

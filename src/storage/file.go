@@ -12,10 +12,6 @@ import (
 	"github.com/keremdokumaci/comandante/src/utils"
 )
 
-var (
-	ErrKeyAndValueFieldsAreRequired = errors.New("key and value fields are required")
-)
-
 type FileStorage struct{}
 
 func NewFileStorage() *FileStorage {
@@ -23,10 +19,6 @@ func NewFileStorage() *FileStorage {
 }
 
 func (fileStorage *FileStorage) Write(key string, value string) error {
-	if key == "" || value == "" {
-		return ErrKeyAndValueFieldsAreRequired
-	}
-
 	err := utils.CreateFileIfNotExists(constants.ConfigurationJsonPath)
 	if err != nil {
 		return err
