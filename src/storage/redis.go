@@ -47,9 +47,9 @@ func (rs *RedisStorage) GetAll() (models.ArrConfigurationVariable, error) {
 	var configVars models.ArrConfigurationVariable
 
 	ctx := context.Background()
-	iter := rs.client.Scan(ctx, 0, keyPrefix, 0).Iterator()
+	iter := rs.client.Scan(ctx, 0, keyPrefix+":*", 0).Iterator()
 	for iter.Next(ctx) {
-		val, err := rs.client.Get(ctx, getKeyWithPrefix(iter.Val())).Result()
+		val, err := rs.client.Get(ctx, iter.Val()).Result()
 		if err != nil {
 			return nil, err
 		}
@@ -67,5 +67,5 @@ func (rs *RedisStorage) GetAll() (models.ArrConfigurationVariable, error) {
 }
 
 func getKeyWithPrefix(key string) string {
-	return keyPrefix + "-" + key
+	return keyPrefix + ":" + key
 }
