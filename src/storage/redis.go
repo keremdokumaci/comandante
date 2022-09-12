@@ -6,12 +6,12 @@ import (
 )
 
 type RedisStorage struct {
-	Options *redis.Options
+	client *redis.Client
 }
 
 func NewRedisStorage(options *redis.Options) *RedisStorage {
 	return &RedisStorage{
-		Options: options,
+		client: redis.NewClient(options),
 	}
 }
 
