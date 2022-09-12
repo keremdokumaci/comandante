@@ -1,11 +1,18 @@
 package storage
 
-import "github.com/keremdokumaci/comandante/src/models"
+import (
+	"github.com/go-redis/redis/v8"
+	"github.com/keremdokumaci/comandante/src/models"
+)
 
-type RedisStorage struct{}
+type RedisStorage struct {
+	Options *redis.Options
+}
 
-func NewRedisStorage() *RedisStorage {
-	return &RedisStorage{}
+func NewRedisStorage(options *redis.Options) *RedisStorage {
+	return &RedisStorage{
+		Options: options,
+	}
 }
 
 func (rs *RedisStorage) Write(key string, value string) error {

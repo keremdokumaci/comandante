@@ -1,6 +1,8 @@
 package storage
 
-import "github.com/keremdokumaci/comandante/src/models"
+import (
+	"github.com/keremdokumaci/comandante/src/models"
+)
 
 type Storer interface {
 	Write(key string, value string) error
@@ -13,14 +15,3 @@ const (
 	StorageFile  StorageType = "file"
 	StorageRedis StorageType = "redis"
 )
-
-func NewStorage(storageType StorageType) Storer {
-	switch storageType {
-	case StorageFile:
-		return NewFileStorage()
-	case StorageRedis:
-		return NewRedisStorage()
-	default:
-		return nil
-	}
-}
