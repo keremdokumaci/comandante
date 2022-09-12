@@ -19,7 +19,7 @@ func NewStorage(storageType StorageType) Storer {
 	case StorageFile:
 		return NewFileStorage()
 	case StorageRedis:
-		return nil
+		return NewRedisStorage()
 	default:
 		return nil
 	}
