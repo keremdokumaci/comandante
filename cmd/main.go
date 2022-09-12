@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/keremdokumaci/comandante"
 	"github.com/keremdokumaci/comandante/src/storage"
 )
@@ -14,7 +15,12 @@ func main() {
 		ErrorHandler: func(err error) {
 			fmt.Println(err.Error())
 		},
-		StoreIn: storage.StorageFile,
+		StoreIn: storage.StorageRedis,
+		RedisOptions: &redis.Options{
+			Addr:     "localhost:6379",
+			Password: "",
+			DB:       0,
+		},
 	})
 
 	http.HandleFunc("/comandante", cmdt.HandlerFunc)
