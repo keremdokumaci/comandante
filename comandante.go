@@ -5,9 +5,8 @@ import (
 )
 
 type Config struct {
-	ErrorHandler   ErrorHandler        `validate:"required"`
-	RetryTimeInSec int                 `validate:"required"`
-	StoreIn        storage.StorageType `validate:"required"`
+	ErrorHandler ErrorHandler        `validate:"required"`
+	StoreIn      storage.StorageType `validate:"required"`
 }
 
 type Comandante struct {

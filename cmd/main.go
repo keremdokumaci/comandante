@@ -14,8 +14,7 @@ func main() {
 		ErrorHandler: func(err error) {
 			fmt.Println(err.Error())
 		},
-		RetryTimeInSec: 3,
-		StoreIn:        storage.StorageFile,
+		StoreIn: storage.StorageFile,
 	})
 
 	http.HandleFunc("/comandante", cmdt.HandlerFunc)
