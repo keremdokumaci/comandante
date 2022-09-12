@@ -71,6 +71,11 @@ func (rs *RedisStorage) GetAll() (models.ArrConfigurationVariable, error) {
 	return configVars, nil
 }
 
+func (rs *RedisStorage) Delete(key string) error {
+	ctx := context.Background()
+	return rs.client.Del(ctx, getKeyWithPrefix(key)).Err()
+}
+
 func getKeyWithPrefix(key string) string {
 	return keyPrefix + ":" + key
 }

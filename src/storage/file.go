@@ -80,3 +80,7 @@ func (*FileStorage) GetAll() (models.ArrConfigurationVariable, error) {
 
 	return envVars, nil
 }
+
+func (rs *FileStorage) Delete(key string) error {
+	return nil
+}
