@@ -30,12 +30,17 @@ func (rs *RedisStorage) Write(key string, value string) error {
 		LastUpdatedAt: time.Now(),
 	}
 
+	key = getKeyWithPrefix(key)
+	if exists, _ := rs.client.Exists(ctx, key).Result(); exists > 0 {
+		return ErrConfigurationVariableAlreadyExists
+	}
+
 	marshaledCfgVar, err := json.Marshal(cfgVar)
 	if err != nil {
 		return err
 	}
 
-	err = rs.client.Set(ctx, getKeyWithPrefix(key), marshaledCfgVar, 0).Err()
+	err = rs.client.Set(ctx, key, marshaledCfgVar, 0).Err()
 	if err != nil {
 		return err
 	}

@@ -13,8 +13,7 @@ import (
 )
 
 var (
-	ErrConfigurationVariableAlreadyExists = errors.New("key already exists")
-	ErrKeyAndValueFieldsAreRequired       = errors.New("key and value fields are required")
+	ErrKeyAndValueFieldsAreRequired = errors.New("key and value fields are required")
 )
 
 type FileStorage struct{}

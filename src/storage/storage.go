@@ -1,7 +1,13 @@
 package storage
 
 import (
+	"errors"
+
 	"github.com/keremdokumaci/comandante/src/models"
+)
+
+var (
+	ErrConfigurationVariableAlreadyExists = errors.New("key already exists")
 )
 
 type Storer interface {
