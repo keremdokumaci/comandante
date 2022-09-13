@@ -14,6 +14,7 @@ type Storer interface {
 	Write(key string, value string) error
 	GetAll() (models.ArrConfigurationVariable, error)
 	Delete(key string) error
+	Update(key string, newValue string) error
 }
 
 type StorageType string

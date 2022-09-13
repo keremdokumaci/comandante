@@ -102,6 +102,14 @@ func (c *Comandante) updateConfig(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	err = c.Storage.Update(request.Key, request.Value)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func (c *Comandante) HandlerFunc(w http.ResponseWriter, r *http.Request) {

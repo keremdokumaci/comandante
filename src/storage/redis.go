@@ -76,6 +76,29 @@ func (rs *RedisStorage) Delete(key string) error {
 	return rs.client.Del(ctx, getKeyWithPrefix(key)).Err()
 }
 
+func (rs *RedisStorage) Update(key string, newValue string) error {
+	ctx := context.Background()
+
+	cfgVar := models.ConfigurationVariable{
+		Key:           key,
+		Value:         newValue,
+		LastUpdatedAt: time.Now(),
+	}
+
+	marshaledCfgVar, err := json.Marshal(cfgVar)
+	if err != nil {
+		return err
+	}
+
+	key = getKeyWithPrefix(key)
+	err = rs.client.Set(ctx, key, marshaledCfgVar, 0).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func getKeyWithPrefix(key string) string {
 	return keyPrefix + ":" + key
 }
