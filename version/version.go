@@ -1,4 +1,4 @@
 package version
 
 // Version is the current version of comandante.
-const Version string = "0.1.12"
+const Version string = "0.1.13"
