@@ -1,3 +1,6 @@
+package client
+
+const htmlContent = `
 <!DOCTYPE html>
 <html>
   <head>
@@ -284,10 +287,10 @@
       const alertSection = document.getElementById("alert-section");
       const wrapper = document.createElement("div");
       wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        "</div>",
+        '<div class="alert alert-${type} alert-dismissible" role="alert">',
+        '<div>${message}</div>',
+        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>',
       ].join("");
       alertSection.append(wrapper);
     }
@@ -297,3 +300,4 @@
     }
   </script>
 </html>
+`

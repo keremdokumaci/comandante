@@ -2,10 +2,7 @@ package client
 
 import (
 	"html/template"
-	"io"
-	"os"
 
-	"github.com/keremdokumaci/comandante/src/constants"
 	"github.com/keremdokumaci/comandante/src/models"
 )
 
@@ -15,19 +12,7 @@ type PageData struct {
 }
 
 func readHtml() (string, error) {
-	file, err := os.Open(constants.ComandanteHtmlPath)
-	if err != nil {
-		return "", err
-	}
-
-	defer file.Close()
-
-	byteValue, err := io.ReadAll(file)
-	if err != nil {
-		return "", err
-	}
-
-	return string(byteValue), nil
+	return htmlContent, nil
 }
 
 func GenerateTemplate(data PageData) (*template.Template, error) {
