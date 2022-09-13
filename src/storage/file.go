@@ -74,5 +74,9 @@ func (*FileStorage) GetAll() (models.ArrConfigurationVariable, error) {
 }
 
 func (rs *FileStorage) Delete(key string) error {
-	return nil
+	return nil //TODO
+}
+
+func (rs *FileStorage) Update(key string, newValue string) error {
+	return nil //TODO
 }
