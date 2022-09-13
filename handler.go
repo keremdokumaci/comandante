@@ -109,6 +109,8 @@ func (c *Comandante) updateConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	os.Setenv(request.Key, request.Value)
+
 	w.WriteHeader(http.StatusOK)
 }
 
