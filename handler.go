@@ -89,6 +89,21 @@ func (c *Comandante) removeConfig(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (c *Comandante) updateConfig(w http.ResponseWriter, r *http.Request) {
+	bytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var request client.UpdateConfigurationVariableRequestModel
+	err = json.Unmarshal(bytes, &request)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+}
+
 func (c *Comandante) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -97,6 +112,8 @@ func (c *Comandante) HandlerFunc(w http.ResponseWriter, r *http.Request) {
 		c.addConfig(w, r)
 	case http.MethodDelete:
 		c.removeConfig(w, r)
+	case http.MethodPut:
+		c.updateConfig(w, r)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}

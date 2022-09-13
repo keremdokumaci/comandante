@@ -8,3 +8,8 @@ type AddConfigurationVariableRequestModel struct {
 type DeleteConfigurationVariableRequestModel struct {
 	Key string `validate:"required"`
 }
+
+type UpdateConfigurationVariableRequestModel struct {
+	Value string `validate:"required"`
+	Key   string `validate:"required"`
+}
