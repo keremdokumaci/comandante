@@ -11,6 +11,7 @@ var (
 )
 
 type Storer interface {
+	Get(key string) (*models.ConfigurationVariable, error)
 	Write(key string, value string) error
 	GetAll() (models.ArrConfigurationVariable, error)
 	Delete(key string) error
