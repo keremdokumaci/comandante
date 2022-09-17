@@ -1,6 +1,8 @@
 package comandante
 
 import (
+	"os"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/keremdokumaci/comandante/src/storage"
 )
@@ -27,6 +29,11 @@ func Configure(cfg Config) *Comandante {
 		str = storage.NewRedisStorage(cfg.RedisOptions)
 	default:
 		return nil
+	}
+
+	vars, _ := str.GetAll()
+	for key, value := range vars.GetKeyValueMap() {
+		os.Setenv(key, value)
 	}
 
 	return &Comandante{
