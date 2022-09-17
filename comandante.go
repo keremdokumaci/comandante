@@ -1,6 +1,7 @@
 package comandante
 
 import (
+	"encoding/json"
 	"os"
 
 	"github.com/go-redis/redis/v8"
@@ -19,8 +20,9 @@ type Comandante struct {
 
 type ErrorHandler func(err error)
 
+var str storage.Storer
+
 func Configure(cfg Config) *Comandante {
-	var str storage.Storer
 
 	switch cfg.StoreIn {
 	case storage.StorageFile:
@@ -39,4 +41,19 @@ func Configure(cfg Config) *Comandante {
 	return &Comandante{
 		Storage: str,
 	}
+}
+
+func Get[T any](key string) (*T, error) {
+	val, err := str.Get(key)
+	if err != nil {
+		return nil, err
+	}
+
+	var genericType T
+	err = json.Unmarshal([]byte(val.Value), &genericType)
+	if err != nil {
+		return nil, err
+	}
+
+	return &genericType, nil
 }
