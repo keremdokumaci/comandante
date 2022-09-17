@@ -60,8 +60,6 @@ func (c *Comandante) addConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	os.Setenv(request.Key, request.Value)
-
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -108,8 +106,6 @@ func (c *Comandante) updateConfig(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	os.Setenv(request.Key, request.Value)
 
 	w.WriteHeader(http.StatusOK)
 }

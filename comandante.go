@@ -2,7 +2,6 @@ package comandante
 
 import (
 	"encoding/json"
-	"os"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/keremdokumaci/comandante/src/storage"
@@ -25,17 +24,10 @@ var str storage.Storer
 func Configure(cfg Config) *Comandante {
 
 	switch cfg.StoreIn {
-	case storage.StorageFile:
-		str = storage.NewFileStorage()
 	case storage.StorageRedis:
 		str = storage.NewRedisStorage(cfg.RedisOptions)
 	default:
 		return nil
-	}
-
-	vars, _ := str.GetAll()
-	for key, value := range vars.GetKeyValueMap() {
-		os.Setenv(key, value)
 	}
 
 	return &Comandante{

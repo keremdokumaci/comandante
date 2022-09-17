@@ -21,6 +21,5 @@ type Storer interface {
 type StorageType string
 
 const (
-	StorageFile  StorageType = "file"
 	StorageRedis StorageType = "redis"
 )
