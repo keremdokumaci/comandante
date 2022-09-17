@@ -286,12 +286,19 @@ const htmlContent = `
     function Alert(message, type) {
       const alertSection = document.getElementById("alert-section");
       const wrapper = document.createElement("div");
+      
+      const alertDiv = '<div class="alert alert-'+type+' alert-dismissible role="alert">'
+      const messageDiv = '<div>'+message+'</div>'
+      const closeButton = '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'
+      const closeDiv = '</div>'
+      
       wrapper.innerHTML = [
-        '<div class="alert alert-${type} alert-dismissible" role="alert">',
-        '<div>${message}</div>',
-        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>',
+        alertDiv,
+        messageDiv,
+        closeButton,
+        closeDiv,
       ].join("");
+      
       alertSection.append(wrapper);
     }
 
