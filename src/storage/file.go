@@ -80,3 +80,7 @@ func (rs *FileStorage) Delete(key string) error {
 func (rs *FileStorage) Update(key string, newValue string) error {
 	return nil //TODO
 }
+
+func (rs *FileStorage) Get(key string) (*models.ConfigurationVariable, error) {
+	return nil, nil //TODO
+}

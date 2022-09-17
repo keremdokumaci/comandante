@@ -99,6 +99,24 @@ func (rs *RedisStorage) Update(key string, newValue string) error {
 	return nil
 }
 
+func (rs *RedisStorage) Get(key string) (*models.ConfigurationVariable, error) {
+	ctx := context.Background()
+
+	configVariableStr, err := rs.client.Get(ctx, getKeyWithPrefix(key)).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	var configVariable models.ConfigurationVariable
+
+	err = json.Unmarshal([]byte(configVariableStr), &configVariable)
+	if err != nil {
+		return nil, err
+	}
+
+	return &configVariable, nil
+}
+
 func getKeyWithPrefix(key string) string {
 	return keyPrefix + ":" + key
 }
